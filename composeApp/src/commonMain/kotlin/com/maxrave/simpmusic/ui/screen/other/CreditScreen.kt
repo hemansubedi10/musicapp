@@ -105,14 +105,14 @@ fun CreditScreen(
             fontSize = 13.sp,
         )
 
-        // Developer - clickable, opens dev blog
+        // Developer - clickable, opens dev profile
         Text(
             text = stringResource(Res.string.maxrave_dev),
             style = typo().bodyMedium,
             textDecoration = TextDecoration.Underline,
             modifier =
                 Modifier.clickable {
-                    openUrl("https://maxrave.dev")
+                    openUrl("https://github.com/hemansubedi10")
                 },
         )
 
@@ -132,10 +132,10 @@ fun CreditScreen(
         Spacer(modifier = Modifier.height(10.dp))
 
         CompositionLocalProvider(LocalMinimumInteractiveComponentSize provides Dp.Unspecified) {
-            // Website button
+            // Website / GitHub button
             TextButton(
                 onClick = {
-                    openUrl("https://simpmusic.org")
+                    openUrl("https://github.com/hemansubedi10/musicapp")
                 },
                 modifier =
                     Modifier
@@ -146,30 +146,10 @@ fun CreditScreen(
                 Text(text = stringResource(Res.string.website))
             }
 
-            // Developer blog button
-            TextButton(
-                onClick = {
-                    openUrl("https://www.simpmusic.org/blogs")
-                },
-                modifier =
-                    Modifier
-                        .align(Alignment.Start)
-                        .padding(horizontal = 25.dp)
-                        .defaultMinSize(minHeight = 1.dp, minWidth = 1.dp),
-            ) {
-                Column {
-                    Text(text = stringResource(Res.string.developer_blog))
-                    Text(
-                        text = stringResource(Res.string.developer_blog_tagline),
-                        style = typo().bodySmall,
-                    )
-                }
-            }
-
             // GitHub button
             TextButton(
                 onClick = {
-                    openUrl("https://github.com/maxrave-dev/SimpMusic")
+                    openUrl("https://github.com/hemansubedi10/musicapp")
                 },
                 modifier =
                     Modifier
@@ -183,7 +163,7 @@ fun CreditScreen(
             // Issue tracker button
             TextButton(
                 onClick = {
-                    openUrl("https://github.com/maxrave-dev/SimpMusic/issues")
+                    openUrl("https://github.com/hemansubedi10/musicapp/issues")
                 },
                 modifier =
                     Modifier

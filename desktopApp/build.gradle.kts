@@ -128,8 +128,8 @@ tasks.named<hydraulic.conveyor.gradle.WriteConveyorConfigTask>("writeConveyorCon
     doLast {
         destination.get().asFile.appendText(
             """
-            |app.fsname = simpmusic
-            |app.display-name = SimpMusic
+            |app.fsname = heman-vibes
+            |app.display-name = HeMan Vibes
             |app.rdns-name = com.maxrave.simpmusic
             |
             |// Override the Gradle-detected classpath with the ProGuard'd
@@ -345,7 +345,7 @@ tasks.register("packageConveyorAppImage") {
     )
 
     doLast {
-        val appName = "SimpMusic"
+        val appName = "HeManVibes"
         val conveyorOutput = rootDir.resolve("output")
         if (!conveyorOutput.exists()) {
             throw GradleException(
@@ -390,7 +390,7 @@ tasks.register("packageConveyorAppImage") {
 
         // Ensure top-level PNG icon expected by appimagetool exists.
         val iconSrc = rootDir.resolve("composeApp/icon/circle_app_icon.png")
-        val iconDst = appDir.resolve("simpmusic.png")
+        val iconDst = appDir.resolve("heman-vibes.png")
         if (!iconDst.exists() && iconSrc.exists()) {
             FileUtils.copyFile(iconSrc, iconDst)
         }
@@ -398,7 +398,7 @@ tasks.register("packageConveyorAppImage") {
         val versionName =
             libs.versions.version.name
                 .get()
-        val desktopFile = appDir.resolve("simpmusic.desktop")
+        val desktopFile = appDir.resolve("heman-vibes.desktop")
         // This file, not Conveyor's, is what actually reaches the user: AppRun installs it into
         // ~/.local/share/applications and runs update-desktop-database. So every scheme listed in
         // `app.url-schemes` in conveyor.conf has to be repeated here as an x-scheme-handler MIME
@@ -409,14 +409,14 @@ tasks.register("packageConveyorAppImage") {
             """[Desktop Entry]
             |Type=Application
             |Version=1.0
-            |Name=SimpMusic
-            |Comment=SimpMusic v$versionName - FOSS YouTube Music Client
-            |Exec=bin/simpmusic %u
-            |Icon=simpmusic
+            |Name=HeMan Vibes
+            |Comment=HeMan Vibes v$versionName - Modern Cross-Platform Music Client
+            |Exec=bin/heman-vibes %u
+            |Icon=heman-vibes
             |Terminal=false
             |Categories=Audio;AudioVideo;
-            |StartupWMClass=SimpMusic
-            |MimeType=x-scheme-handler/simpmusic;x-scheme-handler/wordbyword;
+            |StartupWMClass=HeMan Vibes
+            |MimeType=x-scheme-handler/hemanvibes;x-scheme-handler/simpmusic;x-scheme-handler/wordbyword;
             |
             """.trimMargin(),
         )
@@ -430,9 +430,9 @@ tasks.register("packageConveyorAppImage") {
             |
             |# Install icon into XDG dirs so GNOME/KDE pick it up the first time.
             |ICON_DIR="${'$'}HOME/.local/share/icons/hicolor/256x256/apps"
-            |if [ ! -f "${'$'}ICON_DIR/simpmusic.png" ] || [ "${'$'}HERE/simpmusic.png" -nt "${'$'}ICON_DIR/simpmusic.png" ]; then
+            |if [ ! -f "${'$'}ICON_DIR/heman-vibes.png" ] || [ "${'$'}HERE/heman-vibes.png" -nt "${'$'}ICON_DIR/heman-vibes.png" ]; then
             |    mkdir -p "${'$'}ICON_DIR"
-            |    cp "${'$'}HERE/simpmusic.png" "${'$'}ICON_DIR/simpmusic.png"
+            |    cp "${'$'}HERE/heman-vibes.png" "${'$'}ICON_DIR/heman-vibes.png"
             |    gtk-update-icon-cache -f -t "${'$'}HOME/.local/share/icons/hicolor" 2>/dev/null || true
             |fi
             |
@@ -440,31 +440,25 @@ tasks.register("packageConveyorAppImage") {
             |DESKTOP_DIR="${'$'}HOME/.local/share/applications"
             |mkdir -p "${'$'}DESKTOP_DIR"
             |APPIMAGE_PATH="${'$'}{APPIMAGE:-${'$'}SELF}"
-            |sed "s|Exec=bin/simpmusic|Exec=${'$'}APPIMAGE_PATH|" "${'$'}HERE/simpmusic.desktop" > "${'$'}DESKTOP_DIR/com-maxrave-simpmusic-MainKt.desktop"
+            |sed "s|Exec=bin/heman-vibes|Exec=${'$'}APPIMAGE_PATH|" "${'$'}HERE/heman-vibes.desktop" > "${'$'}DESKTOP_DIR/com-maxrave-simpmusic-MainKt.desktop"
             |update-desktop-database "${'$'}DESKTOP_DIR" 2>/dev/null || true
             |
             |# Cap glibc's per-thread malloc arenas.
-            |#
-            |# glibc spawns a fresh 64 MB-aligned arena whenever it sees mutex contention, up to
-            |# 8 x nproc of them, and never gives an arena back to the OS. Measured on a 20-core
-            |# box: 161 arenas holding 1.45 GB of a 1.9 GB RSS, while the JVM heap was using only
-            |# 121 MB of its 512 MB cap. Pinning the count to 2 took that to ~5 arenas. The cost is
-            |# more allocator lock contention, which this workload does not notice - the audio path
-            |# is native and its buffers are long-lived.
-            |#
-            |# Linux-only by construction: this file only exists inside the AppImage. macOS and
-            |# Windows tune their allocators elsewhere, and MemoryTrimmer covers all three at runtime.
             |export MALLOC_ARENA_MAX=2
             |
             |cd "${'$'}HERE"
-            |exec bin/simpmusic "${'$'}@"
+            |if [ -f "bin/heman-vibes" ]; then
+            |    exec bin/heman-vibes "${'$'}@"
+            |else
+            |    exec bin/simpmusic "${'$'}@"
+            |fi
             |
             """.trimMargin(),
         )
         appRun.setExecutable(true, false)
 
-        // Conveyor's launcher lives at output/bin/simpmusic (lowercase).
-        val appExecutable = appDir.resolve("bin/simpmusic")
+        // Conveyor's launcher lives at output/bin/heman-vibes (lowercase) or bin/simpmusic.
+        val appExecutable = appDir.resolve("bin/heman-vibes").takeIf { it.exists() } ?: appDir.resolve("bin/simpmusic")
         if (appExecutable.exists() && !appExecutable.canExecute()) {
             appExecutable.setExecutable(true)
         }

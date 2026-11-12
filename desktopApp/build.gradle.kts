@@ -167,7 +167,7 @@ compose.desktop {
             }
             targetFormats(*listTarget.toTypedArray())
             modules("jdk.unsupported")
-            packageName = "SimpMusic"
+            packageName = "HeManVibes"
             macOS {
                 val formatedDate =
                     Instant.now().let {

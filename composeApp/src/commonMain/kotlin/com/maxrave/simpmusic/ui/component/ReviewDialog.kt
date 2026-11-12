@@ -43,7 +43,7 @@ fun ReviewDialog(
         confirmButton = {
             TextButton(onClick = {
                 onDoneReview.invoke()
-                uriHandler.openUri("https://github.com/maxrave-dev/SimpMusic")
+                uriHandler.openUri("https://github.com/hemansubedi10/musicapp")
             }) {
                 Text(
                     stringResource(Res.string.give_a_star),
@@ -75,30 +75,16 @@ fun ReviewDialog(
                 Text(
                     buildAnnotatedString {
                         append(stringResource(Res.string.if_you_enjoy_using_simpmusic_star_simpmusic_on_github_or_leave_a_review_on))
-                        withLink(
-                            LinkAnnotation.Url(
-                                "https://www.producthunt.com/products/simpmusic",
-                                TextLinkStyles(style = SpanStyle(textDecoration = TextDecoration.Underline, color = seed)),
-                            ) {
-                                onDoneReview.invoke()
-                                onDismissRequest.invoke()
-                                uriHandler.openUri("https://www.producthunt.com/products/simpmusic")
-                            },
-                        ) {
-                            append(" ProductHunt")
-                        }
                         append("\n")
-                        // Every locale wraps this in quotes to keep the trailing space, Android style, and Compose
-                        // Resources prints them as text. Strip them and add the space here, like " ProductHunt" above.
                         append(stringResource(Res.string.if_you_love_my_work_consider).removeSurrounding("\"").trimEnd() + " ")
                         withLink(
                             LinkAnnotation.Url(
-                                "https://buymeacoffee.com/maxrave",
+                                "https://github.com/sponsors/hemansubedi10",
                                 TextLinkStyles(style = SpanStyle(textDecoration = TextDecoration.Underline, color = seed)),
                             ) {
                                 onDoneReview.invoke()
                                 onDismissRequest.invoke()
-                                uriHandler.openUri("https://buymeacoffee.com/maxrave")
+                                uriHandler.openUri("https://github.com/sponsors/hemansubedi10")
                             },
                         ) {
                             append(stringResource(Res.string.buying_me_a_coffee))
